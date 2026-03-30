@@ -67,7 +67,7 @@ function ProfileContent({ locale }: Props) {
   }, [currentUser])
 
   if (!isConnected || !address) {
-    return <p className="text-muted">{labels.connectWallet}</p>
+    return <p className="text-light-text-muted dark:text-dark-text-muted">{labels.connectWallet}</p>
   }
 
   async function handleSave() {
@@ -94,19 +94,19 @@ function ProfileContent({ locale }: Props) {
     <div className="space-y-8">
       {/* Personal info */}
       <section>
-        <p className="text-sm text-muted mb-1">{labels.address}</p>
+        <p className="text-sm text-light-text-muted dark:text-dark-text-muted mb-1">{labels.address}</p>
         <p className="font-mono text-sm mb-4 break-all">{address}</p>
         <div className="flex gap-2">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={labels.displayName}
-            className="flex-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-700 bg-transparent text-sm"
+            className="flex-1 px-3 py-2 rounded border border-light-border dark:border-dark-border bg-transparent text-sm"
           />
           <button
             onClick={handleSave}
             disabled={saveStatus === 'saving'}
-            className="px-4 py-2 rounded bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-dark transition-colors duration-200 disabled:opacity-50"
           >
             {saveStatus === 'saving' ? labels.saving : saveStatus === 'saved' ? labels.saved : saveStatus === 'error' ? labels.saveFailed : labels.save}
           </button>
@@ -115,24 +115,24 @@ function ProfileContent({ locale }: Props) {
 
       {/* Donation history */}
       <section>
-        <h2 className="text-lg font-semibold mb-4">{labels.donationHistory}</h2>
+        <h2 className="text-lg font-semibold font-serif mb-4">{labels.donationHistory}</h2>
         {sortedTxs.length === 0 ? (
-          <p className="text-muted text-sm">{labels.noData}</p>
+          <p className="text-light-text-muted dark:text-dark-text-muted text-sm">{labels.noData}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left border-b dark:border-gray-800">
-                  <th className="py-2">{labels.time}</th>
-                  <th className="py-2">{labels.org}</th>
-                  <th className="py-2 text-right">{labels.amount}</th>
+                <tr className="text-left border-b border-black/10 dark:border-white/10">
+                  <th className="py-2.5 text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.time}</th>
+                  <th className="py-2.5 text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.org}</th>
+                  <th className="py-2.5 text-right text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.amount}</th>
                 </tr>
               </thead>
               <tbody>
                 {sortedTxs.map((tx) => {
                   const org = getOrgByWallet(tx.receiver)
                   return (
-                    <tr key={`${tx.hash}-${tx.receiver}-${tx.chainId}`} className="border-b dark:border-gray-800">
+                    <tr key={`${tx.hash}-${tx.receiver}-${tx.chainId}`} className="border-b border-black/[0.04] dark:border-white/[0.04] hover:bg-black/[0.015] dark:hover:bg-white/[0.02] transition-colors">
                       <td className="py-3">{new Date(tx.timestamp * 1000).toLocaleDateString()}</td>
                       <td className="py-3">{org ? (locale === 'zh' ? org.nameZh : org.name) : `${tx.receiver.slice(0, 6)}...${tx.receiver.slice(-4)}`}</td>
                       <td className="py-3 text-right font-mono">{formatUnits(BigInt(tx.amount), tx.decimals)}</td>

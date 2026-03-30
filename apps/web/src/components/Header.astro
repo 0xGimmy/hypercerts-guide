@@ -14,56 +14,54 @@ const nav = [
   { href: '/profile', label: t.profile },
 ]
 ---
-<header class="pt-6 px-4 pb-4">
-  <div class="flex items-center justify-between bg-light-foreground dark:bg-dark-foreground p-4 md:p-10 rounded-xl">
+<header class="border-b border-light-border dark:border-dark-border">
+  <div class="flex items-center justify-between px-6 md:px-12 py-4">
     <!-- Logo -->
-    <a href="/" class="flex flex-row space-x-2">
-      <img src="/logo.svg" alt="logo" class="w-[30px] h-[30px]" />
-      <div class="flex flex-col space-y-2 lg:space-x-2 lg:flex-row lg:space-y-0">
-        <img src="/header-zh.svg" alt="台灣超讚指南" class="h-[30px] w-auto dark:brightness-0 dark:invert" />
-        <img src="/header-en.svg" alt="HyperAwesome Guidebook" class="h-[30px] w-auto dark:brightness-0 dark:invert" />
+    <a href="/" class="flex items-center gap-3">
+      <div class="w-8 h-8 border-2 border-accent relative flex items-center justify-center">
+        <div class="absolute inset-[3px] border border-accent"></div>
+        <div class="absolute inset-[7px] border border-accent rotate-45"></div>
+        <div class="absolute inset-[8px] bg-accent rounded-full"></div>
+        <span class="relative text-[7px] font-black text-white font-serif">讚</span>
       </div>
+      <span class="font-serif font-bold text-base text-light-text dark:text-dark-text">台灣超讚指南</span>
     </a>
 
-    <div class="flex flex-row space-x-2">
-      <!-- Desktop nav -->
-      <nav class="py-auto text-sm text-center font-semibold space-x-6 hidden lg:flex items-center">
-        {nav.map(({ href, label }) => (
-          <a href={href} class="text-center py-auto max-w-20 w-full break-keep">{label}</a>
-        ))}
-      </nav>
+    <!-- Desktop nav -->
+    <nav class="hidden lg:flex items-center gap-7 text-sm">
+      {nav.map(({ href, label }) => (
+        <a href={href} class="text-light-text-secondary dark:text-dark-text-secondary hover:text-accent transition-colors duration-200">{label}</a>
+      ))}
+    </nav>
 
-      <!-- Mode + Locale toggle pill -->
-      <div class="m-auto px-2">
-        <div class="flex flex-row border rounded-lg px-1 py-1 dark:border-white dark:text-white">
-          <button id="theme-toggle" class="w-6 h-6 flex items-center justify-center" aria-label="Toggle dark mode">
-            <!-- Moon (light mode) -->
-            <svg class="w-4 h-4 dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-            </svg>
-            <!-- Sun (dark mode) -->
-            <svg class="w-4 h-4 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-            </svg>
-          </button>
-          <span class="border-r mx-1 dark:border-white"></span>
-          <LocaleToggle />
-        </div>
-      </div>
+    <!-- Right controls -->
+    <div class="flex items-center gap-3.5">
+      <LocaleToggle />
 
-      <!-- Wallet (desktop only) -->
+      <button id="theme-toggle" class="text-light-text-secondary dark:text-dark-text-secondary hover:text-accent transition-colors" aria-label="Toggle dark mode">
+        <!-- Moon (light mode) -->
+        <svg class="w-[18px] h-[18px] dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+        </svg>
+        <!-- Sun (dark mode) -->
+        <svg class="w-[18px] h-[18px] hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+        </svg>
+      </button>
+
+      <!-- Wallet -->
       <div class="hidden lg:flex">
-        <WalletButton client:only="react" />
+        <WalletButton client:only="react" locale={locale} />
       </div>
     </div>
   </div>
 
   <!-- Mobile nav -->
-  <nav class="lg:hidden flex items-center justify-around py-3">
+  <nav class="lg:hidden flex items-center justify-around py-3 border-t border-light-border dark:border-dark-border">
     {nav.map(({ href, label }) => (
-      <a href={href} class="text-sm font-semibold hover:text-primary transition-colors">{label}</a>
+      <a href={href} class="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary hover:text-accent transition-colors duration-200">{label}</a>
     ))}
-    <WalletButton client:only="react" />
+    <WalletButton client:only="react" locale={locale} />
   </nav>
 </header>
 

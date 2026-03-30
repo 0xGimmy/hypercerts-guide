@@ -20,7 +20,7 @@ const footerLinks = locale === 'zh'
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet" />
     <script is:inline>
       const theme = localStorage.getItem('theme') ??
         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -32,15 +32,18 @@ const footerLinks = locale === 'zh'
     <main class="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
       <slot />
     </main>
-    <footer class="mt-20 border-t-2 pt-8 pb-8 px-4">
-      <div class="ml-2 sm:ml-4 flex flex-col sm:flex-row justify-between max-w-5xl mx-auto">
-        <div class="flex flex-row space-x-6 text-sm font-semibold text-primary">
-          <a class="cursor-pointer border-b-2" href={locale === 'en' ? '/en/manifesto' : '/manifesto'}>{footerLinks.manifesto}</a>
-          <a class="cursor-pointer border-b-2" href={locale === 'en' ? '/en/about' : '/about'}>{footerLinks.about}</a>
+    <footer class="mt-auto border-t border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
+      <div class="max-w-5xl mx-auto px-6 md:px-12 py-6 flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <span class="font-serif font-bold text-base text-light-text dark:text-dark-text">台灣超讚指南</span>
+          <nav class="flex items-center gap-5 text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            <a href={locale === 'en' ? '/en/donate' : '/donate'} class="hover:text-accent transition-colors">{locale === 'zh' ? '捐款' : 'Donate'}</a>
+            <a href="/leaderboard" class="hover:text-accent transition-colors">{locale === 'zh' ? '排行榜' : 'Leaderboard'}</a>
+            <a href={locale === 'en' ? '/en/manifesto' : '/manifesto'} class="hover:text-accent transition-colors">{footerLinks.manifesto}</a>
+            <a href={locale === 'en' ? '/en/about' : '/about'} class="hover:text-accent transition-colors">{footerLinks.about}</a>
+          </nav>
         </div>
-        <p class="text-left text-xs sm:text-right mt-4 sm:mt-0">
-          &copy; {new Date().getFullYear()} Taiwan HyperAwesome Guidebook. All rights reserved.
-        </p>
+        <p class="text-xs text-light-text-muted dark:text-dark-text-muted">&copy; {new Date().getFullYear()} 台灣超讚指南</p>
       </div>
     </footer>
   </body>

@@ -2,12 +2,12 @@
 import Layout from '../../layouts/Layout.astro'
 import Header from '../../components/Header.astro'
 import OrgCard from '../../components/OrgCard.astro'
+import HeroReveal from '../../components/react/HeroReveal'
 import { getCollection } from 'astro:content'
 
 const locale = Astro.currentLocale ?? 'en'
 const orgs = await getCollection('orgs', ({ data }: { data: { locale: string } }) => data.locale === locale)
 
-// Get manifesto description for hero heading (same as old site)
 const pages = await getCollection('pages', ({ data }) => data.locale === locale)
 const manifesto = pages.find((p) => p.slug.includes('manifesto'))
 const heading = manifesto?.data.description ?? 'Unite through HyperTogatherings!'
@@ -15,31 +15,42 @@ const heading = manifesto?.data.description ?? 'Unite through HyperTogatherings!
 <Layout title="Taiwan HyperAwesome Guidebook">
   <Header slot="header" />
 
-  <!-- Background logo -->
-  <img
-    src="/background-logo.svg"
-    alt=""
-    class="fixed top-36 left-[40%] w-96 opacity-[0.03] dark:opacity-[0.08] dark:invert pointer-events-none select-none -z-10"
-  />
-
   <!-- Hero -->
-  <div class="p-10 lg:pl-20 lg:pt-20">
-    <h1 class="text-3xl font-bold text-left text-primary">{heading}</h1>
-    <img src="/underline.svg" alt="" class="w-[570px] h-auto mt-2" />
+  <HeroReveal client:visible heading={heading} locale="en" />
+
+  <!-- CTA -->
+  <div class="flex flex-col items-center gap-4 -mt-8 mb-12">
+    <a href="/en/donate" class="px-8 py-3 bg-accent text-white text-sm font-medium rounded-md hover:bg-accent-dark transition-colors">
+      Start Donating
+    </a>
+    <div class="flex items-center gap-4 text-sm text-light-text-secondary dark:text-dark-text-secondary">
+      <a href="/en/manifesto" class="hover:text-accent transition-colors">Manifesto</a>
+      <span class="text-light-border dark:text-dark-border">·</span>
+      <a href="/en/about" class="hover:text-accent transition-colors">About</a>
+    </div>
   </div>
 
   <!-- Org cards -->
-  <div class="flex flex-wrap">
-    {orgs.map((org) => (
-      <div class="p-4 w-full sm:w-1/2 md:w-1/3">
-        <OrgCard
-          title={org.data.title}
-          description={org.data.description}
-          slug={org.slug}
-          verified={org.data.verified}
-          date={org.data.date}
-        />
+  <section class="pb-12">
+    <div class="flex items-end justify-between mb-8">
+      <div class="flex flex-col gap-1.5">
+        <span class="text-xs font-medium text-accent tracking-wider">VERIFIED ORGANIZATIONS</span>
+        <h2 class="text-2xl md:text-3xl font-bold font-serif text-light-text dark:text-dark-text">Where Your Donation Goes</h2>
       </div>
-    ))}
-  </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {orgs.map((org, i) => (
+        <div style={`animation: fadeIn 0.4s ease-out ${0.1 + i * 0.08}s both`}>
+          <OrgCard
+            title={org.data.title}
+            description={org.data.description}
+            slug={org.slug}
+            verified={org.data.verified}
+            date={org.data.date}
+            image={org.data.image}
+          />
+        </div>
+      ))}
+    </div>
+  </section>
 </Layout>

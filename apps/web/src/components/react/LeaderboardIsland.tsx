@@ -12,7 +12,7 @@ interface Props {
 const t = {
   zh: {
     orgs: '組織',
-    users: '贊助人',
+    users: '讚助人',
     rank: '排名',
     org: '組織',
     name: '名稱',
@@ -65,7 +65,7 @@ function LeaderboardContent({ locale }: Props) {
     queryFn: api.getUsers,
   })
 
-  const userNameMap = new Map(users?.map((u) => [u.address, u.name]) ?? [])
+  const userNameMap = new Map(users?.map((u) => [u.address.toLowerCase(), u.name]) ?? [])
 
   const isLoading = tab === 'orgs' ? orgLoading : userLoading
   const isError = tab === 'orgs' ? orgError : userError
@@ -76,14 +76,14 @@ function LeaderboardContent({ locale }: Props) {
     <div>
       {/* Title + Tab switcher on same row */}
       <div className="flex items-baseline justify-between mb-6">
-        <h1 className="text-2xl font-bold">{title}</h1>
-        <div className="flex gap-6 border-b dark:border-gray-700">
+        <h1 className="text-2xl font-bold font-serif">{title}</h1>
+        <div className="flex gap-6 border-b border-black/10 dark:border-white/10">
           <button
             onClick={() => setTab('orgs')}
             className={`pb-2 text-sm font-semibold transition-colors ${
               tab === 'orgs'
-                ? 'text-primary border-b-2 border-primary'
-                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'text-accent border-b-2 border-accent'
+                : 'text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text dark:hover:text-dark-text'
             }`}
           >
             {labels.orgs}
@@ -92,8 +92,8 @@ function LeaderboardContent({ locale }: Props) {
             onClick={() => setTab('users')}
             className={`pb-2 text-sm font-semibold transition-colors ${
               tab === 'users'
-                ? 'text-primary border-b-2 border-primary'
-                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'text-accent border-b-2 border-accent'
+                : 'text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text dark:hover:text-dark-text'
             }`}
           >
             {labels.users}
@@ -101,26 +101,26 @@ function LeaderboardContent({ locale }: Props) {
         </div>
       </div>
 
-      {isLoading && <p className="text-gray-500 text-sm">{labels.loading}</p>}
+      {isLoading && <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">{labels.loading}</p>}
       {isError && <p className="text-red-500 text-sm">{labels.error}</p>}
 
       {/* Organization leaderboard */}
       {tab === 'orgs' && !isLoading && !isError && orgData?.length === 0 && (
-        <p className="text-gray-500 text-sm">{labels.noData}</p>
+        <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">{labels.noData}</p>
       )}
       {tab === 'orgs' && !isLoading && !isError && (orgData?.length ?? 0) > 0 && (
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left border-b dark:border-gray-700">
-              <th className="py-2 w-16">{labels.rank}</th>
-              <th className="py-2">{labels.org}</th>
-              <th className="py-2 text-right">{labels.points}</th>
-              <th className="py-2 text-right">{labels.amount}</th>
+            <tr className="text-left border-b border-black/10 dark:border-white/10">
+              <th className="py-2.5 w-16 text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.rank}</th>
+              <th className="py-2.5 text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.org}</th>
+              <th className="py-2.5 text-right text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.points}</th>
+              <th className="py-2.5 text-right text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.amount}</th>
             </tr>
           </thead>
           <tbody>
-            {orgData?.map((org, i) => (
-              <tr key={org.address} className="border-b dark:border-gray-800">
+            {orgData?.filter((org) => BigInt(org.amount) > 0n).map((org, i) => (
+              <tr key={org.address} className="border-b border-black/[0.04] dark:border-white/[0.04] hover:bg-black/[0.015] dark:hover:bg-white/[0.02] transition-colors">
                 <td className="py-3">{i + 1}</td>
                 <td className="py-3 font-medium">{getLocalizedOrgName(org.address, locale)}</td>
                 <td className="py-3 text-right font-mono">{org.points.toFixed(2)}</td>
@@ -133,22 +133,22 @@ function LeaderboardContent({ locale }: Props) {
 
       {/* User leaderboard */}
       {tab === 'users' && !isLoading && !isError && userData?.length === 0 && (
-        <p className="text-gray-500 text-sm">{labels.noData}</p>
+        <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">{labels.noData}</p>
       )}
       {tab === 'users' && !isLoading && !isError && (userData?.length ?? 0) > 0 && (
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left border-b dark:border-gray-700">
-              <th className="py-2 w-16">{labels.rank}</th>
-              <th className="py-2">{labels.name}</th>
-              <th className="py-2 text-right">{labels.amount}</th>
+            <tr className="text-left border-b border-black/10 dark:border-white/10">
+              <th className="py-2.5 w-16 text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.rank}</th>
+              <th className="py-2.5 text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.name}</th>
+              <th className="py-2.5 text-right text-xs uppercase tracking-wider text-black/40 dark:text-white/40 font-medium">{labels.amount}</th>
             </tr>
           </thead>
           <tbody>
-            {userData?.map((user, i) => (
-              <tr key={user.address} className="border-b dark:border-gray-800">
+            {userData?.filter((user) => BigInt(user.amount) > 0n).map((user, i) => (
+              <tr key={user.address} className="border-b border-black/[0.04] dark:border-white/[0.04] hover:bg-black/[0.015] dark:hover:bg-white/[0.02] transition-colors">
                 <td className="py-3">{i + 1}</td>
-                <td className="py-3">{userNameMap.get(user.address) ?? `${user.address.slice(0, 6)}...${user.address.slice(-4)}`}</td>
+                <td className="py-3">{userNameMap.get(user.address.toLowerCase()) ?? `${user.address.slice(0, 6)}...${user.address.slice(-4)}`}</td>
                 <td className="py-3 text-right font-mono">{formatUnits(BigInt(user.amount), NORMALIZED_DECIMALS)} USD</td>
               </tr>
             ))}

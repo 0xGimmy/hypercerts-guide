@@ -308,7 +308,7 @@ function DonateForm({ locale }: Props) {
             setSelectedOrgs({})
             setError('')
           }}
-          className="px-6 py-2 rounded bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
+          className="px-6 py-2 rounded-lg bg-accent text-white font-medium hover:bg-accent-dark transition-colors duration-200"
         >
           {labels.donateAgain}
         </button>
@@ -321,7 +321,7 @@ function DonateForm({ locale }: Props) {
       {/* Organization list */}
       <div className="space-y-3">
         {organizations.map((org) => (
-          <div key={org.wallet} className="flex items-center gap-3 p-4 rounded-xl bg-light-foreground dark:bg-dark-foreground shadow-sm">
+          <div key={org.wallet} className="flex items-center gap-3 p-4 rounded-xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
             <input
               type="checkbox"
               checked={!!selectedOrgs[org.wallet]}
@@ -341,7 +341,7 @@ function DonateForm({ locale }: Props) {
                 onChange={(e) =>
                   setAmounts((prev) => ({ ...prev, [org.wallet]: e.target.value }))
                 }
-                className="w-32 px-3 py-2 rounded border border-gray-300 dark:border-gray-700 bg-transparent text-sm"
+                className="w-32 px-3 py-2 rounded border border-light-border dark:border-dark-border bg-transparent text-sm"
               />
             )}
           </div>
@@ -359,8 +359,8 @@ function DonateForm({ locale }: Props) {
                 onClick={() => setSelectedToken(token.key)}
                 className={`px-4 py-2 rounded border text-sm transition-colors ${
                   selectedToken === token.key
-                    ? 'border-primary bg-primary/10 text-primary'
-                    : 'border-gray-300 dark:border-gray-700'
+                    ? 'border-accent bg-accent/10 text-accent'
+                    : 'border-light-border dark:border-dark-border'
                 }`}
               >
                 {token.symbol}
@@ -380,14 +380,14 @@ function DonateForm({ locale }: Props) {
         <button
           onClick={handleDonate}
           disabled={status !== 'idle' || !selectedToken}
-          className="px-6 py-3 rounded bg-primary text-white font-semibold hover:opacity-90 transition-colors disabled:opacity-50"
+          className="px-6 py-3 rounded-lg bg-accent text-white font-semibold hover:bg-accent-dark transition-colors duration-200 disabled:opacity-50"
         >
           {status === 'approving' ? labels.approving : status === 'donating' ? labels.donating : labels.donate}
         </button>
         <button
           onClick={handleDistribution}
           disabled={status !== 'idle'}
-          className="px-6 py-3 rounded bg-primary text-white font-semibold hover:opacity-90 transition-colors disabled:opacity-50"
+          className="px-6 py-3 rounded-lg border border-accent text-accent font-semibold hover:bg-accent/5 transition-colors duration-200 disabled:opacity-50"
         >
           {labels.distribution}
         </button>

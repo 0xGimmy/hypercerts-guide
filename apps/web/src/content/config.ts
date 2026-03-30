@@ -8,6 +8,7 @@ const orgs = defineCollection({
     date: z.coerce.date(),
     address: z.string().optional(),
     verified: z.boolean().default(false),
+    image: z.string().optional(),
     link: z.string().optional(),
     locale: z.enum(['en', 'zh']),
   }),

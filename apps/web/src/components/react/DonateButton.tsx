@@ -30,7 +30,7 @@ const t = {
     chainChanged: '鏈已切換，請重試',
   },
   en: {
-    donateHere: 'Donate Here',
+    donateHere: 'Donate',
     donateTo: 'Donate to',
     success: 'Donation successful!',
     close: 'Close',
@@ -179,21 +179,21 @@ function DonateButtonInner({ orgName, orgWallet, locale = 'en' }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="px-4 py-2 rounded bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
+        className="px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-accent-dark transition-colors duration-200"
       >
         {labels.donateHere}
       </button>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setOpen(false)}>
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl p-6 w-full max-w-md mx-4 border border-light-border dark:border-dark-border" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-semibold mb-4">{labels.donateTo} {orgName}</h3>
 
             {status === 'success' ? (
               <div className="text-center py-4">
                 <p className="text-2xl mb-2">🎉</p>
                 <p>{labels.success}</p>
-                <button onClick={() => { setOpen(false); setStatus('idle'); setError(''); setAmount('') }} className="mt-4 text-primary">{labels.close}</button>
+                <button onClick={() => { setOpen(false); setStatus('idle'); setError(''); setAmount('') }} className="mt-4 text-accent">{labels.close}</button>
               </div>
             ) : (
               <div className="space-y-4">
@@ -202,7 +202,7 @@ function DonateButtonInner({ orgName, orgWallet, locale = 'en' }: Props) {
                     <button
                       onClick={() => setSelectedToken('NATIVE')}
                       className={`px-3 py-1 rounded border text-sm ${
-                        selectedToken === 'NATIVE' ? 'border-primary text-primary' : 'border-gray-300 dark:border-gray-700'
+                        selectedToken === 'NATIVE' ? 'border-accent text-accent' : 'border-light-border dark:border-dark-border'
                       }`}
                     >
                       {nativeToken.symbol}
@@ -213,7 +213,7 @@ function DonateButtonInner({ orgName, orgWallet, locale = 'en' }: Props) {
                       key={key}
                       onClick={() => setSelectedToken(key)}
                       className={`px-3 py-1 rounded border text-sm ${
-                        selectedToken === key ? 'border-primary text-primary' : 'border-gray-300 dark:border-gray-700'
+                        selectedToken === key ? 'border-accent text-accent' : 'border-light-border dark:border-dark-border'
                       }`}
                     >
                       {token.symbol}
@@ -227,13 +227,13 @@ function DonateButtonInner({ orgName, orgWallet, locale = 'en' }: Props) {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Amount"
-                  className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-700 bg-transparent"
+                  className="w-full px-3 py-2 rounded border border-light-border dark:border-dark-border bg-transparent"
                 />
                 {error && <p className="text-red-500 text-sm">{error}</p>}
                 <button
                   onClick={handleDonate}
                   disabled={status !== 'idle' || !selectedToken || !amount}
-                  className="w-full py-2 rounded bg-primary text-white font-medium disabled:opacity-50"
+                  className="w-full py-2 rounded-lg bg-accent text-white font-medium disabled:opacity-50 hover:bg-accent-dark transition-colors duration-200"
                 >
                   {status === 'approving' ? labels.approving : status === 'donating' ? labels.donating : labels.donate}
                 </button>

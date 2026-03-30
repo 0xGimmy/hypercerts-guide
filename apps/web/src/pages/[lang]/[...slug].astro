@@ -21,7 +21,7 @@ const { Content } = await render(page)
   <Header slot="header" />
   <article class="prose dark:prose-invert prose-lg max-w-3xl mx-auto">
     <h1>{page.data.title}</h1>
-    {page.data.description && <p class="text-lg text-muted">{page.data.description}</p>}
+    {page.data.description && <p class="text-lg text-light-text-muted dark:text-dark-text-muted">{page.data.description}</p>}
     <hr />
     <Content />
   </article>

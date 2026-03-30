@@ -10,6 +10,6 @@ const t = locale === 'zh'
 ---
 <Layout title={t.title}>
   <Header slot="header" />
-  <h1 class="text-2xl font-bold mb-6">{t.title}</h1>
+  <h1 class="text-3xl font-bold font-serif text-light-text dark:text-dark-text text-center mb-8">{t.title}</h1>
   <ProfileIsland client:only="react" locale={locale} />
 </Layout>

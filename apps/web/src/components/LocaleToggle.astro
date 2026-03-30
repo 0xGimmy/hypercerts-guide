@@ -3,11 +3,17 @@ const locale = Astro.currentLocale ?? 'zh'
 const label = locale === 'en' ? '中' : 'EN'
 const currentPath = Astro.url.pathname
 
-// Strip any existing locale prefix to get the clean path
-const cleanPath = currentPath.replace(/^\/(en|zh)/, '') || '/'
-
-// zh (default) = no prefix, en = /en prefix
-const targetPath = locale === 'zh' ? `/en${cleanPath}` : cleanPath
+// Handle org pages: /orgs/en/slug ↔ /orgs/zh/slug
+const orgMatch = currentPath.match(/^\/orgs\/(en|zh)\/(.+)/)
+let targetPath: string
+if (orgMatch) {
+  const targetLocale = orgMatch[1] === 'en' ? 'zh' : 'en'
+  targetPath = `/orgs/${targetLocale}/${orgMatch[2]}`
+} else {
+  // Regular pages: /en/path ↔ /path
+  const cleanPath = currentPath.replace(/^\/(en|zh)/, '') || '/'
+  targetPath = locale === 'zh' ? `/en${cleanPath}` : cleanPath
+}
 ---
 <a href={targetPath} class="w-6 h-6 flex items-center justify-center text-sm">
   {label}
