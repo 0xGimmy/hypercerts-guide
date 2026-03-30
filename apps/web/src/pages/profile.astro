@@ -8,7 +8,7 @@ const t = locale === 'zh'
   ? { title: '個人' }
   : { title: 'Profile' }
 ---
-<Layout title={t.title}>
+<Layout title={t.title} description={locale === 'zh' ? '查看你的捐款紀錄與影響力證書' : 'View your donation history and impact certificates'} noindex>
   <Header slot="header" />
   <h1 class="text-3xl font-bold font-serif text-light-text dark:text-dark-text text-center mb-8">{t.title}</h1>
   <ProfileIsland client:only="react" locale={locale} />

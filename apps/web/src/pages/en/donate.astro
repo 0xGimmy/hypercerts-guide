@@ -8,7 +8,7 @@ const t = locale === 'zh'
   ? { title: '捐款' }
   : { title: 'Donate' }
 ---
-<Layout title={t.title}>
+<Layout title={t.title} description="Choose organizations to support. Every donation is recorded on-chain.">
   <Header slot="header" />
   <h1 class="text-2xl font-bold mb-6">{t.title}</h1>
   <DonateIsland client:only="react" locale={locale} />

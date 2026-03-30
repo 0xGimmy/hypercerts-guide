@@ -3,24 +3,108 @@ import '../styles/global.css'
 
 interface Props {
   title?: string
+  description?: string
+  image?: string
+  type?: 'website' | 'article'
+  noindex?: boolean
 }
 
-const { title = '台灣超讚指南 | Taiwan HyperAwesome Guidebook' } = Astro.props
+const SITE_NAME_ZH = '台灣超讚指南'
+const SITE_NAME_EN = 'Taiwan HyperAwesome Guidebook'
+const SITE_URL = 'https://hypercerts-guide.pages.dev'
+const DEFAULT_DESC_ZH = '透過區塊鏈捐款支持台灣在地組織，每筆捐款公開透明記錄在鏈上'
+const DEFAULT_DESC_EN = 'Support local Taiwanese organizations through blockchain donations, every contribution recorded on-chain'
+const DEFAULT_IMAGE = '/logo.svg'
+
 const locale = Astro.currentLocale ?? 'zh'
+const {
+  title = locale === 'zh' ? SITE_NAME_ZH : SITE_NAME_EN,
+  description = locale === 'zh' ? DEFAULT_DESC_ZH : DEFAULT_DESC_EN,
+  image = DEFAULT_IMAGE,
+  type = 'website',
+  noindex = false,
+} = Astro.props
+
+const siteName = locale === 'zh' ? SITE_NAME_ZH : SITE_NAME_EN
+const fullTitle = title === siteName ? title : `${title} | ${siteName}`
+
+// Canonical & hreflang
+const pathname = Astro.url.pathname
+const canonicalURL = new URL(pathname, SITE_URL).href
+const zhPath = pathname.startsWith('/en/') ? pathname.replace(/^\/en\//, '/') : pathname
+const enPath = pathname.startsWith('/en/') ? pathname : `/en${pathname === '/' ? '' : pathname}`
+const zhURL = new URL(zhPath, SITE_URL).href
+const enURL = new URL(enPath, SITE_URL).href
+
+// OG image — resolve to absolute URL
+const ogImage = image.startsWith('http') ? image : new URL(image, SITE_URL).href
+
 const footerLinks = locale === 'zh'
   ? { manifesto: '宣言', about: '關於' }
   : { manifesto: 'Manifesto', about: 'About' }
 ---
 <!doctype html>
-<html lang={locale} class="light">
+<html lang={locale === 'zh' ? 'zh-TW' : 'en'} class="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Canonical & hreflang -->
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" hreflang="zh-TW" href={zhURL} />
+    <link rel="alternate" hreflang="en" href={enURL} />
+    <link rel="alternate" hreflang="x-default" href={zhURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={locale === 'zh' ? 'zh_TW' : 'en_US'} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#2D7D6B" />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- JSON-LD -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'WebSite',
+          name: SITE_NAME_ZH,
+          alternateName: SITE_NAME_EN,
+          url: SITE_URL,
+          inLanguage: ['zh-TW', 'en'],
+          description: DEFAULT_DESC_ZH,
+        },
+        {
+          '@type': 'Organization',
+          name: SITE_NAME_ZH,
+          url: SITE_URL,
+          logo: new URL('/logo.svg', SITE_URL).href,
+        },
+      ],
+    })} />
+
     <script is:inline>
       const theme = localStorage.getItem('theme') ??
         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');

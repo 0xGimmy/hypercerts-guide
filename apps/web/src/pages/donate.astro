@@ -8,7 +8,7 @@ const t = locale === 'zh'
   ? { title: '捐款' }
   : { title: 'Donate' }
 ---
-<Layout title={t.title}>
+<Layout title={t.title} description={locale === 'zh' ? '選擇你想支持的組織，每筆捐款都將記錄在鏈上' : 'Choose organizations to support. Every donation is recorded on-chain.'}>
   <Header slot="header" />
   <div class="flex flex-col items-center gap-2 mb-8">
     <h1 class="text-3xl font-bold font-serif text-light-text dark:text-dark-text">{t.title}</h1>

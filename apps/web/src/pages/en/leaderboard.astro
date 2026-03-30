@@ -8,7 +8,7 @@ const t = locale === 'zh'
   ? { title: '排行榜' }
   : { title: 'Leaderboard' }
 ---
-<Layout title={t.title}>
+<Layout title={t.title} description="View the donation leaderboard and celebrate every supporter's generosity">
   <Header slot="header" />
   <LeaderboardIsland client:only="react" locale={locale} />
 </Layout>

@@ -17,7 +17,7 @@ const { Content } = await render(org)
 const locale = org.data.locale ?? 'zh'
 const officialSiteLabel = locale === 'zh' ? '官方網站' : 'Official Site'
 ---
-<Layout title={org.data.title}>
+<Layout title={org.data.title} description={org.data.description} image={org.data.image} type="article">
   <Header slot="header" />
   <article class="prose dark:prose-invert prose-lg max-w-3xl mx-auto">
     <div class="flex items-start justify-between gap-4 mb-6 not-prose">

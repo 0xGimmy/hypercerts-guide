@@ -13,7 +13,10 @@ const pages = await getCollection('pages', ({ data }) => data.locale === locale)
 const manifesto = pages.find((p) => p.slug.includes('manifesto'))
 const heading = manifesto?.data.description ?? (locale === 'zh' ? '揪團行動，超讚出發！' : 'Unite through HyperTogatherings!')
 ---
-<Layout title={locale === 'zh' ? '台灣超讚指南' : 'Taiwan HyperAwesome Guidebook'}>
+<Layout
+  title={locale === 'zh' ? '台灣超讚指南' : 'Taiwan HyperAwesome Guidebook'}
+  description={locale === 'zh' ? '透過區塊鏈捐款支持台灣在地組織，每筆捐款公開透明記錄在鏈上' : 'Support local Taiwanese organizations through blockchain donations, every contribution recorded on-chain'}
+>
   <Header slot="header" />
 
   <!-- Hero -->
