@@ -1,12 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import {
-  filterWithCooldown,
   calculateOrgDonations,
   calculateUserDonations,
 } from '../../lib/points.js'
 import type { Transaction } from '@repo/shared'
-
-const DAY = 86400
 
 function makeTx(overrides: Partial<Transaction> = {}): Transaction {
   return {
@@ -21,67 +18,6 @@ function makeTx(overrides: Partial<Transaction> = {}): Transaction {
     ...overrides,
   }
 }
-
-describe('filterWithCooldown', () => {
-  it('keeps first tx of a pair', () => {
-    const txs = [makeTx({ timestamp: 1000 })]
-    expect(filterWithCooldown(txs)).toHaveLength(1)
-  })
-
-  it('filters tx within 7 days of same sender-receiver-chain', () => {
-    const txs = [
-      makeTx({ timestamp: 1000 }),
-      makeTx({ timestamp: 1000 + 3 * DAY }), // 3 days later — filtered
-    ]
-    expect(filterWithCooldown(txs)).toHaveLength(1)
-  })
-
-  it('keeps tx after 7 days', () => {
-    const txs = [
-      makeTx({ timestamp: 1000 }),
-      makeTx({ timestamp: 1000 + 8 * DAY }), // 8 days later — kept
-    ]
-    expect(filterWithCooldown(txs)).toHaveLength(2)
-  })
-
-  it('keeps tx at exactly 7 days', () => {
-    const txs = [
-      makeTx({ timestamp: 1000 }),
-      makeTx({ timestamp: 1000 + 7 * DAY }), // exactly 7 days — kept
-    ]
-    expect(filterWithCooldown(txs)).toHaveLength(2)
-  })
-
-  it('handles multiple sender-receiver pairs independently', () => {
-    const txs = [
-      makeTx({ sender: '0xa', receiver: '0x1', timestamp: 1000 }),
-      makeTx({ sender: '0xa', receiver: '0x2', timestamp: 1000 + DAY }), // different pair
-      makeTx({ sender: '0xb', receiver: '0x1', timestamp: 1000 + DAY }), // different pair
-    ]
-    expect(filterWithCooldown(txs)).toHaveLength(3)
-  })
-
-  it('treats same sender-receiver on different chains as independent', () => {
-    const txs = [
-      makeTx({ sender: '0xa', receiver: '0x1', chainId: 10, timestamp: 1000 }),
-      makeTx({ sender: '0xa', receiver: '0x1', chainId: 1, timestamp: 1000 + DAY }), // same pair, different chain — kept
-    ]
-    expect(filterWithCooldown(txs)).toHaveLength(2)
-  })
-
-  it('resets cooldown window after accepted tx', () => {
-    const txs = [
-      makeTx({ timestamp: 1000 }),
-      makeTx({ timestamp: 1000 + 8 * DAY }), // kept, resets window
-      makeTx({ timestamp: 1000 + 10 * DAY }), // 2 days after second — filtered
-    ]
-    expect(filterWithCooldown(txs)).toHaveLength(2)
-  })
-
-  it('returns empty for empty input', () => {
-    expect(filterWithCooldown([])).toHaveLength(0)
-  })
-})
 
 describe('calculateOrgDonations', () => {
   it('calculates points = (Σ√amounts)² for single org', () => {
@@ -118,15 +54,14 @@ describe('calculateOrgDonations', () => {
     expect(result[1].address).toBe('0xorg1')
   })
 
-  it('applies 7-day cooldown before calculating', () => {
-    // Same donor to same org, 1 day apart — second one filtered
+  it('aggregates multiple donations from same donor to same org', () => {
     const txs = [
       makeTx({ timestamp: 1000, amount: '100000000' }),
-      makeTx({ timestamp: 1000 + DAY, amount: '900000000' }),
+      makeTx({ timestamp: 2000, amount: '900000000' }),
     ]
     const result = calculateOrgDonations(txs)
-    // Only first tx counts: √100 = 10, 10² = 100
-    expect(result[0].points).toBe(100)
+    // Both count: √100 + √900 = 10 + 30 = 40, 40² = 1600
+    expect(result[0].points).toBe(1600)
   })
 
   it('aggregates across chains', () => {
@@ -210,15 +145,14 @@ describe('calculateUserDonations', () => {
     expect(result[1].amount).toBe('50000000')
   })
 
-  it('applies cooldown consistently with org donations', () => {
-    // Same donor to same org, 1 day apart — second one filtered
+  it('aggregates multiple donations from same donor', () => {
     const txs = [
       makeTx({ sender: '0xdonor1', timestamp: 1000, amount: '100000000' }),
-      makeTx({ sender: '0xdonor1', timestamp: 1000 + DAY, amount: '900000000' }),
+      makeTx({ sender: '0xdonor1', timestamp: 2000, amount: '900000000' }),
     ]
     const result = calculateUserDonations(txs)
     expect(result).toHaveLength(1)
-    expect(result[0].amount).toBe('100000000') // only first tx counts
+    expect(result[0].amount).toBe('1000000000') // both count: 100 + 900
   })
 
   it('normalizes amounts across different decimals', () => {

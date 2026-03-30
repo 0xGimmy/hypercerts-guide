@@ -1,7 +1,6 @@
 import type { Transaction, OrganizationDonation, UserDonation } from '@repo/shared'
 import { formatUnits } from 'viem'
 
-const SEVEN_DAYS_SEC = 7 * 24 * 60 * 60
 const STANDARD_DECIMALS = 6
 
 /**
@@ -25,47 +24,13 @@ function normalizeAmount(amount: bigint, fromDecimals: number): bigint {
 }
 
 /**
- * Filter transactions with 7-day cooldown per (sender, receiver, chainId) tuple.
- * For each tuple, only the first transaction within a 7-day window counts.
- */
-export function filterWithCooldown(txs: Transaction[]): Transaction[] {
-  const groups = new Map<string, Transaction[]>()
-
-  for (const tx of txs) {
-    const key = `${tx.sender}:${tx.receiver}:${tx.chainId}`
-    const group = groups.get(key)
-    if (group) {
-      group.push(tx)
-    } else {
-      groups.set(key, [tx])
-    }
-  }
-
-  const result: Transaction[] = []
-
-  for (const group of groups.values()) {
-    group.sort((a, b) => a.timestamp - b.timestamp)
-
-    let lastAccepted = -Infinity
-    for (const tx of group) {
-      if (tx.timestamp - lastAccepted >= SEVEN_DAYS_SEC) {
-        result.push(tx)
-        lastAccepted = tx.timestamp
-      }
-    }
-  }
-
-  return result
-}
-
-/**
  * Calculate quadratic funding points per organization.
  * Points = (Σ √(amount_in_human_readable))²
  *
  * Amounts are normalized to a 6-decimal standard for consistent aggregation.
  */
 export function calculateOrgDonations(txs: Transaction[]): OrganizationDonation[] {
-  const validTxs = filterWithCooldown(filterStablecoinOnly(txs))
+  const validTxs = filterStablecoinOnly(txs)
 
   const sqrtSums = new Map<string, number>()
   const totalAmounts = new Map<string, bigint>()
@@ -95,10 +60,10 @@ export function calculateOrgDonations(txs: Transaction[]): OrganizationDonation[
 
 /**
  * Aggregate total donation amount per sender.
- * Amounts are normalized to 6-decimal standard. Cooldown is applied for consistency.
+ * Amounts are normalized to 6-decimal standard.
  */
 export function calculateUserDonations(txs: Transaction[]): UserDonation[] {
-  const validTxs = filterWithCooldown(filterStablecoinOnly(txs))
+  const validTxs = filterStablecoinOnly(txs)
   const amounts = new Map<string, bigint>()
 
   for (const tx of validTxs) {
