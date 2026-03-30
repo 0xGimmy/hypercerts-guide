@@ -4,13 +4,14 @@ import WalletButton from './react/WalletButton'
 
 const locale = Astro.currentLocale ?? 'zh'
 const t = {
-  zh: { leaderboard: '排行榜', donate: '捐款', profile: '個人' },
-  en: { leaderboard: 'Leaderboard', donate: 'Donate', profile: 'Profile' },
-}[locale] ?? { leaderboard: 'Leaderboard', donate: 'Donate', profile: 'Profile' }
+  zh: { leaderboard: '排行榜', donate: '捐款', profile: '個人', river: '百川計畫' },
+  en: { leaderboard: 'Leaderboard', donate: 'Donate', profile: 'Profile', river: 'Project River' },
+}[locale] ?? { leaderboard: 'Leaderboard', donate: 'Donate', profile: 'Profile', river: 'Project River' }
 
 const nav = [
   { href: '/leaderboard', label: t.leaderboard },
   { href: '/donate', label: t.donate },
+  { href: 'https://river.hypercerts.guide', label: t.river, external: true },
   { href: '/profile', label: t.profile },
 ]
 ---
@@ -29,8 +30,8 @@ const nav = [
 
     <!-- Desktop nav -->
     <nav class="hidden lg:flex items-center gap-7 text-sm">
-      {nav.map(({ href, label }) => (
-        <a href={href} class="text-light-text-secondary dark:text-dark-text-secondary hover:text-accent transition-colors duration-200">{label}</a>
+      {nav.map(({ href, label, external }) => (
+        <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} class="text-light-text-secondary dark:text-dark-text-secondary hover:text-accent transition-colors duration-200">{label}</a>
       ))}
     </nav>
 
@@ -58,8 +59,8 @@ const nav = [
 
   <!-- Mobile nav -->
   <nav class="lg:hidden flex items-center justify-around py-3 border-t border-light-border dark:border-dark-border">
-    {nav.map(({ href, label }) => (
-      <a href={href} class="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary hover:text-accent transition-colors duration-200">{label}</a>
+    {nav.map(({ href, label, external }) => (
+      <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} class="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary hover:text-accent transition-colors duration-200">{label}</a>
     ))}
     <WalletButton client:only="react" locale={locale} />
   </nav>
