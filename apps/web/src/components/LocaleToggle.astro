@@ -1,0 +1,14 @@
+---
+const locale = Astro.currentLocale ?? 'zh'
+const label = locale === 'en' ? '中' : 'EN'
+const currentPath = Astro.url.pathname
+
+// Strip any existing locale prefix to get the clean path
+const cleanPath = currentPath.replace(/^\/(en|zh)/, '') || '/'
+
+// zh (default) = no prefix, en = /en prefix
+const targetPath = locale === 'zh' ? `/en${cleanPath}` : cleanPath
+---
+<a href={targetPath} class="w-6 h-6 flex items-center justify-center text-sm">
+  {label}
+</a>

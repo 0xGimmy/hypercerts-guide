@@ -1,0 +1,32 @@
+---
+interface Props {
+  title: string
+  description?: string
+  slug: string
+  verified?: boolean
+  date?: Date
+}
+const { title, description, slug, verified, date } = Astro.props
+const locale = Astro.currentLocale ?? 'zh'
+---
+<a href={`/orgs/${slug}`} class="block shadow-md h-52 p-4 text-center rounded-xl bg-light-foreground dark:bg-dark-foreground hover:border-2 hover:border-primary transition-all">
+  <div class="flex flex-col justify-evenly h-full p-4">
+    <p class="mb-4 text-sm">
+      {date?.toLocaleDateString(locale === 'zh' ? 'zh-TW' : 'en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })}
+    </p>
+    <div class="text-xl font-semibold text-center flex-row flex mx-auto items-center">
+      <span>{title}</span>
+      {verified && (
+        <span class="mx-2">
+          <svg class="w-6 h-6 bg-primary rounded-md p-0.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </span>
+      )}
+    </div>
+  </div>
+</a>

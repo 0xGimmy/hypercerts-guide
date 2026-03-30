@@ -1,0 +1,11 @@
+name = "hypercerts-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hypercerts-db"
+database_id = "3ed6a2f4-a988-4526-bccc-11afbd8569c1"
+
+[triggers]
+crons = ["*/1 * * * *"]

@@ -1,0 +1,14 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Header from '../../components/Header.astro'
+import LeaderboardIsland from '../../components/react/LeaderboardIsland'
+
+const locale = Astro.currentLocale ?? 'en'
+const t = locale === 'zh'
+  ? { title: '排行榜' }
+  : { title: 'Leaderboard' }
+---
+<Layout title={t.title}>
+  <Header slot="header" />
+  <LeaderboardIsland client:only="react" locale={locale} />
+</Layout>

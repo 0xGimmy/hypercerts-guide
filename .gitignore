@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.next/
+.astro/
+.wrangler/
+.env
+.env.local
+.env*.local
+.dev.vars
+*.db
+.DS_Store
+*.tsbuildinfo
+coverage/
+.contentlayer/
+out/
+cache/
+broadcast/
+
+# Foundry
+contracts/out/
+contracts/cache/

@@ -1,0 +1,33 @@
+{
+  "name": "hypercerts-guide",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev",
+    "build": "pnpm -r build",
+    "build:web": "pnpm --filter web build",
+    "build:api": "pnpm --filter api build",
+    "test": "pnpm -r test",
+    "test:contracts": "cd contracts && forge test",
+    "test:api": "pnpm --filter api test",
+    "test:web": "pnpm --filter web test",
+    "e2e": "pnpm --filter web e2e",
+    "lint": "pnpm -r lint"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "keccak",
+      "bufferutil",
+      "utf-8-validate",
+      "workerd"
+    ]
+  },
+  "devDependencies": {
+    "viem": "^2.47.6"
+  }
+}

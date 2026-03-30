@@ -1,0 +1,44 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Header from '../../components/Header.astro'
+import DonateButton from '../../components/react/DonateButton'
+import { getCollection, render } from 'astro:content'
+
+export async function getStaticPaths() {
+  const orgs = await getCollection('orgs')
+  return orgs.map((org) => ({
+    params: { slug: org.slug },
+    props: { org },
+  }))
+}
+
+const { org } = Astro.props
+const { Content } = await render(org)
+const locale = org.data.locale ?? 'zh'
+const officialSiteLabel = locale === 'zh' ? '官方網站' : 'Official Site'
+---
+<Layout title={org.data.title}>
+  <Header slot="header" />
+  <article class="prose dark:prose-invert prose-lg max-w-3xl mx-auto">
+    <h1>{org.data.title}</h1>
+    {org.data.description && <p class="text-lg text-muted">{org.data.description}</p>}
+    <hr />
+    <Content />
+  </article>
+  <div class="mt-8 flex justify-center gap-4">
+    {org.data.link && (
+      <a href={org.data.link} target="_blank" rel="noopener noreferrer"
+         class="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 transition-colors">
+        {officialSiteLabel} ↗
+      </a>
+    )}
+    {org.data.address && (
+      <DonateButton
+        client:only="react"
+        orgName={org.data.title}
+        orgWallet={org.data.address}
+        locale={locale}
+      />
+    )}
+  </div>
+</Layout>

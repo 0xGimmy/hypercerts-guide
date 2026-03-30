@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Header from '../components/Header.astro'
+import DonateIsland from '../components/react/DonateIsland'
+
+const locale = Astro.currentLocale ?? 'zh'
+const t = locale === 'zh'
+  ? { title: '捐款' }
+  : { title: 'Donate' }
+---
+<Layout title={t.title}>
+  <Header slot="header" />
+  <h1 class="text-2xl font-bold mb-6">{t.title}</h1>
+  <DonateIsland client:only="react" locale={locale} />
+</Layout>

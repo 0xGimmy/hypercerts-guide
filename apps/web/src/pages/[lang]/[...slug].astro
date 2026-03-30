@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Header from '../../components/Header.astro'
+import { getCollection, render } from 'astro:content'
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages')
+  // Only generate /en/* pages here — zh pages use /[...slug].astro (no prefix)
+  return pages
+    .filter((page) => page.data.locale === 'en')
+    .map((page) => ({
+      params: { lang: 'en', slug: page.slug.replace('en/', '') },
+      props: { page },
+    }))
+}
+
+const { page } = Astro.props
+const { Content } = await render(page)
+---
+<Layout title={page.data.title}>
+  <Header slot="header" />
+  <article class="prose dark:prose-invert prose-lg max-w-3xl mx-auto">
+    <h1>{page.data.title}</h1>
+    {page.data.description && <p class="text-lg text-muted">{page.data.description}</p>}
+    <hr />
+    <Content />
+  </article>
+</Layout>
