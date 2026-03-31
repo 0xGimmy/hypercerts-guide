@@ -4,14 +4,14 @@ import WalletButton from './react/WalletButton'
 
 const locale = Astro.currentLocale ?? 'zh'
 const t = {
-  zh: { leaderboard: '排行榜', donate: '捐款', profile: '個人', river: '百川計畫' },
-  en: { leaderboard: 'Leaderboard', donate: 'Donate', profile: 'Profile', river: 'Project River' },
-}[locale] ?? { leaderboard: 'Leaderboard', donate: 'Donate', profile: 'Profile', river: 'Project River' }
+  zh: { leaderboard: '排行榜', donate: '捐款', profile: '個人', awesome100: '超讚100選' },
+  en: { leaderboard: 'Leaderboard', donate: 'Donate', profile: 'Profile', awesome100: 'Awesome 100' },
+}[locale] ?? { leaderboard: 'Leaderboard', donate: 'Donate', profile: 'Profile', awesome100: 'Awesome 100' }
 
 const nav = [
   { href: '/leaderboard', label: t.leaderboard },
   { href: '/donate', label: t.donate },
-  { href: 'https://river.hypercerts.guide', label: t.river, external: true },
+  { href: 'https://awesome100.hypercerts.guide', label: t.awesome100, external: true },
   { href: '/profile', label: t.profile },
 ]
 ---
