@@ -4,7 +4,7 @@ A community-driven donation platform connecting donors to vetted Taiwan nonprofi
 
 用信任串起台灣的公益力量 — 一個社群驅動的捐款平台，透過區塊鏈連結捐款者與台灣公益組織。
 
-**Live site:** https://hypercerts-guide.pages.dev
+**Live site:** https://hypercerts.guide
 
 ---
 
